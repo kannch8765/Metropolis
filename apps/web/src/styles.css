@@ -1,0 +1,37 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  color: #18251f;
+  background: #f3f1e8;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input { font: inherit; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; border-bottom: 1px solid #d6d3c8; background: rgba(243, 241, 232, 0.92); }
+.topbar > div { display: flex; align-items: center; gap: 10px; }
+.brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; color: white; background: #215a45; }
+nav { display: flex; gap: 8px; }
+nav button { border: 0; border-radius: 999px; padding: 9px 14px; background: transparent; cursor: pointer; }
+nav button.active { color: white; background: #215a45; }
+.page-grid { display: grid; grid-template-columns: minmax(300px, 410px) 1fr; min-height: calc(100vh - 69px); }
+.sidebar { padding: 48px 32px; border-right: 1px solid #d6d3c8; }
+h1 { max-width: 720px; margin: 8px 0 14px; font-family: Georgia, serif; font-size: clamp(2.4rem, 5vw, 4.8rem); line-height: 0.98; font-weight: 500; }
+.eyebrow { color: #a34b2b; font-size: 0.75rem; letter-spacing: 0.13em; text-transform: uppercase; font-weight: 700; }
+.sidebar label { display: grid; gap: 8px; margin: 32px 0 24px; font-size: 0.85rem; font-weight: 700; }
+input { width: 100%; padding: 14px; border: 1px solid #c6c3b7; border-radius: 12px; background: #fffdf6; }
+.resource-list { display: grid; gap: 10px; }
+.resource-list article, .metric-grid article, .insight-panel { padding: 16px; border: 1px solid #d6d3c8; border-radius: 16px; background: rgba(255, 253, 246, 0.8); }
+.resource-list h3 { margin: 5px 0; }
+.resource-list p, .resource-list small { margin: 0; color: #5d665f; }
+.map-shell { position: relative; overflow: hidden; min-height: 600px; background: #d9e1d7; }
+.map-grid { position: absolute; inset: 0; opacity: 0.55; background-image: linear-gradient(#9caca0 1px, transparent 1px), linear-gradient(90deg, #9caca0 1px, transparent 1px); background-size: 52px 52px; transform: rotate(-8deg) scale(1.2); }
+.map-copy { position: absolute; right: 7%; top: 9%; max-width: 390px; padding: 24px; border-radius: 20px; background: rgba(255,255,255,0.78); backdrop-filter: blur(12px); }
+.map-copy h2 { margin: 8px 0; font-family: Georgia, serif; font-size: 2rem; }
+.pin { position: absolute; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50% 50% 50% 8px; color: white; background: #a34b2b; box-shadow: 0 12px 24px #38544644; transform: rotate(-45deg); }
+.pin-a { left: 23%; top: 36%; } .pin-b { left: 52%; top: 62%; background: #215a45; } .pin-c { left: 72%; top: 28%; background: #c3922f; }
+.dashboard { min-height: calc(100vh - 69px); padding: 64px max(28px, 8vw); }
+.metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 36px 0 16px; }
+.metric-grid article { display: grid; gap: 8px; }
+.metric-grid strong { font: 3rem Georgia, serif; }
+.insight-panel { max-width: 760px; }
+@media (max-width: 760px) { .topbar { align-items: flex-start; gap: 16px; } nav { flex-direction: column; } .page-grid { grid-template-columns: 1fr; } .sidebar { border-right: 0; } .map-shell { min-height: 480px; } .metric-grid { grid-template-columns: 1fr; } }
