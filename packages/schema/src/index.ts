@@ -32,7 +32,10 @@ export const wardMetricSchema = z.object({
   wardId: z.string(),
   resourceCount: z.number().int().nonnegative(),
   languageCount: z.number().int().nonnegative(),
+  foreignResidents: z.number().int().nonnegative().nullable(),
   resourcesPerThousandForeignResidents: z.number().nonnegative().nullable(),
+  sourceUrl: z.string().url().nullable(),
+  sourceUpdatedAt: z.string().nullable(),
   computedAt: z.string().datetime(),
 });
 

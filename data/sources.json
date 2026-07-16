@@ -1,0 +1,17 @@
+{
+  "sources": [
+    {
+      "id": "tokyo_foreign_residents_2026_01",
+      "title": "外国人人口 令和8年1月 第1表 区市町村別国籍・地域別外国人人口",
+      "publisher": "Tokyo Metropolitan Government, Statistics Division",
+      "landingPage": "https://www.toukei.metro.tokyo.lg.jp/gaikoku/2026/ga26010000.htm",
+      "downloadUrl": "https://www.toukei.metro.tokyo.lg.jp/gaikoku/2026/ga26ev0100.csv",
+      "termsUrl": "https://www.toukei.metro.tokyo.lg.jp/homepage/site-policy.htm",
+      "format": "CSV",
+      "referenceDate": "2026-01-01",
+      "scope": "Tokyo municipalities; the MVP importer publishes the 23 special wards",
+      "notes": "The pipeline records provenance but does not commit downloaded rows. Confirm reuse terms before publishing derived bulk data.",
+      "reuseStatus": "verify_before_public_redistribution"
+    }
+  ]
+}
