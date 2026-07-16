@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "metropolis",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-07-17",
+  "assets": {
+    "not_found_handling": "single-page-application"
+  },
+  "vars": {
+    "APP_ENV": "development"
+  }
+  // Add a D1 binding after creating the database:
+  // "d1_databases": [{ "binding": "DB", "database_name": "metropolis", "database_id": "..." }]
+}

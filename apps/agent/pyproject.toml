@@ -1,0 +1,13 @@
+[project]
+name = "metropolis-agent"
+version = "0.1.0"
+description = "Google ADK natural-language gateway for verified Metropolis data"
+requires-python = ">=3.12"
+dependencies = [
+  "google-adk>=2.4.0,<3",
+  "httpx>=0.28,<1",
+  "python-dotenv>=1.1,<2"
+]
+
+[tool.ruff]
+line-length = 100
