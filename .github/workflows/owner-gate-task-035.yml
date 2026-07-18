@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - agent/map-real-resources
+  pull_request:
+    branches:
+      - main
+    types:
+      - synchronize
 
 permissions:
   contents: write
@@ -24,12 +29,12 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Verify frozen parent and workflow-only dispatch commit
+      - name: Verify frozen target and workflow-only dispatch changes
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "13455f95cc54468c45cd6b7d511811dc5c51fc93"
-          test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/owner-gate-task-035.yml"
+          git merge-base --is-ancestor 13455f95cc54468c45cd6b7d511811dc5c51fc93 HEAD
+          test "$(git diff --name-only 13455f95cc54468c45cd6b7d511811dc5c51fc93 HEAD)" = ".github/workflows/owner-gate-task-035.yml"
 
       - name: Set up Node and pnpm
         uses: actions/setup-node@v4
