@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import io
 import json
 import urllib.request
 from dataclasses import asdict, dataclass
@@ -106,7 +107,7 @@ def is_multicultural(row: dict[str, str]) -> bool:
 
 def stable_id(row: dict[str, str]) -> str:
     material = "|".join(
-        row.get(key, "") for key in ("NO", "イベント名", "開始日", "場所名称", "住所")
+        row.get(key, "") or "" for key in ("NO", "イベント名", "開始日", "場所名称", "住所")
     )
     return f"itabashi-event-{hashlib.sha256(material.encode('utf-8')).hexdigest()[:16]}"
 
@@ -148,11 +149,11 @@ def normalize_rows(rows: Iterable[dict[str, str]], source_updated_at: str) -> li
                 sourceUpdatedAt=source_updated_at,
             )
         )
-    return resources
+    return sorted(resources, key=lambda resource: (resource.name, resource.id))
 
 
 def parse_csv(text: str, source_updated_at: str) -> list[Resource]:
-    return normalize_rows(csv.DictReader(text.splitlines()), source_updated_at)
+    return normalize_rows(csv.DictReader(io.StringIO(text)), source_updated_at)
 
 
 def sql_quote(value: str | None) -> str:
@@ -162,8 +163,8 @@ def sql_quote(value: str | None) -> str:
 
 
 def to_d1_sql(resources: Iterable[Resource], ingested_at: str) -> str:
-    statements = ["BEGIN;"]
-    for resource in resources:
+    statements: list[str] = []
+    for resource in sorted(resources, key=lambda item: (item.name, item.id)):
         statements.append(
             "INSERT INTO resources (id, kind, name, description, latitude, longitude, ward_id, "
             "languages_json, audiences_json, accessibility_tags_json, start_at, end_at, cost_type, "
@@ -196,7 +197,6 @@ def to_d1_sql(resources: Iterable[Resource], ingested_at: str) -> str:
             "end_at=excluded.end_at, cost_type=excluded.cost_type, source_url=excluded.source_url, "
             "source_updated_at=excluded.source_updated_at, ingested_at=excluded.ingested_at;"
         )
-    statements.append("COMMIT;")
     return "\n".join(statements) + "\n"
 
 

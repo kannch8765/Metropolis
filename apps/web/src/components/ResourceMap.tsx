@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import maplibregl, { type Map as MapLibreMap, type Marker } from 'maplibre-gl';
 import type { Resource } from '@metropolis/schema';
+import { openMarkerPopup, popupContent } from './resourceMapUtils';
 
 const markerColors: Record<Resource['kind'], string> = {
   japanese_class: '#a34b2b',
@@ -15,25 +16,6 @@ type ResourceMapProps = {
   onSelect: (id: string) => void;
 };
 
-function popupContent(resource: Resource): HTMLElement {
-  const root = document.createElement('div');
-  root.className = 'map-popup';
-
-  const kind = document.createElement('small');
-  kind.textContent = resource.kind.replaceAll('_', ' ');
-  root.append(kind);
-
-  const title = document.createElement('strong');
-  title.textContent = resource.name;
-  root.append(title);
-
-  const detail = document.createElement('span');
-  detail.textContent = `${resource.wardId} · ${resource.languages.join(', ') || 'language not specified'}`;
-  root.append(detail);
-
-  return root;
-}
-
 export function ResourceMap({ resources, selectedId, onSelect }: ResourceMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
@@ -47,7 +29,6 @@ export function ResourceMap({ resources, selectedId, onSelect }: ResourceMapProp
       style: 'https://tiles.openfreemap.org/styles/liberty',
       center: [139.70514, 35.7509],
       zoom: 12.3,
-      attributionControl: true,
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
     mapRef.current = map;
@@ -97,7 +78,7 @@ export function ResourceMap({ resources, selectedId, onSelect }: ResourceMapProp
       zoom: Math.max(mapRef.current.getZoom(), 14),
       essential: true,
     });
-    marker.togglePopup();
+    openMarkerPopup(marker);
   }, [resources, selectedId]);
 
   return (

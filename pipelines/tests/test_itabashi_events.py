@@ -1,7 +1,7 @@
 from pathlib import Path
 import unittest
 
-from pipelines.sources.itabashi_events import parse_csv, to_d1_sql
+from pipelines.sources.itabashi_events import decode_csv, parse_csv, to_d1_sql
 
 FIXTURE = Path(__file__).parent / "fixtures" / "itabashi_events_sample.csv"
 
@@ -24,6 +24,13 @@ class ItabashiEventsTest(unittest.TestCase):
         sql = to_d1_sql(resources, "2026-07-18")
         self.assertIn("ON CONFLICT(id) DO UPDATE", sql)
         self.assertIn("https://example.org/japanese", sql)
+        self.assertNotIn("BEGIN", sql)
+        self.assertNotIn("COMMIT", sql)
+
+    def test_cp932_and_stable_order_are_supported(self) -> None:
+        self.assertEqual(decode_csv("板橋区".encode("cp932")), "板橋区")
+        fixture = FIXTURE.read_text(encoding="utf-8")
+        self.assertEqual(parse_csv(fixture, "2026-02-10"), parse_csv("\n".join(fixture.splitlines()[0:1] + fixture.splitlines()[1:][::-1]), "2026-02-10"))
 
 
 if __name__ == "__main__":
