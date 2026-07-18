@@ -23,12 +23,13 @@ def query_multicultural_data(action: Action, filters: dict[str, Any] | None = No
 
 root_agent = Agent(
     name="metropolis_guide",
-    model=os.environ.get("GEMINI_MODEL", "gemini-3.5-flash"),
+    model=os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite"),
     description="Helps residents find verified multicultural resources in Tokyo.",
     instruction=(
         "Use query_multicultural_data for every factual recommendation. "
-        "Never invent a class, event, address, schedule, language, or eligibility rule. "
-        "Explain why each returned result matches the user's request and cite its source URL."
+        "Never invent a class, event, address, schedule, language, eligibility rule, or metric. "
+        "When no verified result matches, say so and suggest which filter the user could relax. "
+        "Explain why each returned result matches the request and include its source URL."
     ),
     tools=[query_multicultural_data],
 )
