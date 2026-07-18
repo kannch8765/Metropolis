@@ -1,0 +1,95 @@
+name: Owner gate Task 035
+
+on:
+  push:
+    branches:
+      - agent/map-real-resources
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-gate-task-035
+  cancel-in-progress: false
+
+jobs:
+  apply-approved-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/map-real-resources
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Verify frozen parent and workflow-only dispatch commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "13455f95cc54468c45cd6b7d511811dc5c51fc93"
+          test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/owner-gate-task-035.yml"
+
+      - name: Set up Node and pnpm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          corepack prepare pnpm@11.13.1 --activate
+          node --version
+          pnpm --version
+
+      - name: Apply the approved browser fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('apps/web/src/components/ResourceMap.tsx')
+          text = path.read_text(encoding='utf-8')
+          old = "      marker.getElement().addEventListener('click', () => onSelect(resource.id));"
+          new = """      marker.getElement().addEventListener('click', () => {
+                onSelect(resource.id);
+                setTimeout(() => openMarkerPopup(marker), 0);
+              });"""
+          if text.count(old) != 1:
+              raise SystemExit('expected exactly one frozen marker click handler')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+
+      - name: Generate and verify the approved lockfile
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm install
+          test "$(sha256sum pnpm-lock.yaml | awk '{print $1}')" = "ad259f1d1d6a3385f9bebdf851e6b98e5965b017f90747e2c4524330ab055779"
+          rm -rf node_modules apps/web/node_modules packages/schema/node_modules
+          pnpm install --frozen-lockfile
+
+      - name: Run owner gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm check
+          pnpm build
+          python3 -m unittest discover -s pipelines/tests -v
+          python3 -m compileall pipelines
+          git diff --check
+
+      - name: Commit the approved result and remove this workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/owner-gate-task-035.yml
+          test "$(git status --short | awk '{print $2}' | sort | tr '\n' ' ')" = "apps/web/src/components/ResourceMap.tsx pnpm-lock.yaml "
+          git config user.name "pipeline-bus owner gate"
+          git config user.email "pipeline-bus@users.noreply.github.com"
+          git add apps/web/src/components/ResourceMap.tsx pnpm-lock.yaml .github/workflows/owner-gate-task-035.yml
+          git commit -m "Finalize map lockfile and browser fix"
+          git push origin HEAD:agent/map-real-resources
