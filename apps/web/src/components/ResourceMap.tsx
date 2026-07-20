@@ -54,7 +54,10 @@ export function ResourceMap({ resources, selectedId, onSelect }: ResourceMapProp
         .addTo(map);
 
       marker.getElement().setAttribute('aria-label', resource.name);
-      marker.getElement().addEventListener('click', () => onSelect(resource.id));
+      marker.getElement().addEventListener('click', () => {
+        onSelect(resource.id);
+        setTimeout(() => openMarkerPopup(marker), 0);
+      });
       markersRef.current.set(resource.id, marker);
     }
 
