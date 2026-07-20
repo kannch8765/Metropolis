@@ -2,7 +2,7 @@
 
 Each source adapter owns downloading and parsing one external dataset. Adapters must emit canonical records plus source and freshness metadata; product code never parses source-specific files.
 
-## First official source
+## Tokyo foreign-resident statistics
 
 Tokyo's January 2026 foreign-resident table provides the first administrator-side denominator. The importer publishes the 23 special wards as JSON and idempotent D1 SQL.
 
@@ -19,4 +19,24 @@ python -m pipelines.sources.tokyo_foreign_residents \
   --output-dir data/processed
 ```
 
-The next source adapter should add verified Japanese classes or multicultural events using the same provenance boundary.
+## Itabashi multicultural events
+
+Itabashi's event feed is published under CC BY 4.0 and includes coordinates. The adapter keeps only records whose title or description signals Japanese learning, international exchange, foreign-resident support, or multicultural activity.
+
+```bash
+python -m pipelines.sources.itabashi_events \
+  --output-json data/processed/itabashi_events.json \
+  --output-sql data/processed/itabashi_events.sql
+```
+
+For a pinned snapshot or offline run:
+
+```bash
+python -m pipelines.sources.itabashi_events \
+  --input data/raw/itabashi_events.csv \
+  --source-updated-at 2026-02-10 \
+  --output-json data/processed/itabashi_events.json \
+  --output-sql data/processed/itabashi_events.sql
+```
+
+The raw download and generated outputs remain ignored. The repository keeps the adapter, fixture, tests, source URLs, license, and attribution boundary.

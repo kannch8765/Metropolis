@@ -12,6 +12,30 @@
       "scope": "Tokyo municipalities; the MVP importer publishes the 23 special wards",
       "notes": "The pipeline records provenance but does not commit downloaded rows. Confirm reuse terms before publishing derived bulk data.",
       "reuseStatus": "verify_before_public_redistribution"
+    },
+    {
+      "id": "itabashi_events_2026_01",
+      "title": "イベント情報（オープンデータ）",
+      "publisher": "Itabashi City",
+      "landingPage": "https://www.city.itabashi.tokyo.jp/1000779/1010229.html",
+      "downloadUrl": "https://www.city.itabashi.tokyo.jp/_res/projects/default_project/_page_/001/010/229/20260210.csv",
+      "termsUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "format": "CSV",
+      "referenceDate": "2026-01-31",
+      "scope": "Itabashi events; the MVP importer selects multicultural and Japanese-learning records with valid coordinates",
+      "notes": "The source page and Tokyo open-data catalog identify the resource as CC BY 4.0. Attribution must remain attached to derived records.",
+      "reuseStatus": "cc_by_4_0"
+    },
+    {
+      "id": "itabashi_icief_live_pages",
+      "title": "Japanese learning and international exchange programme pages",
+      "publisher": "Itabashi Culture and International Exchange Foundation",
+      "landingPage": "https://www.itabashi-ci.org/int/",
+      "format": "HTML",
+      "referenceDate": "2026-07-18",
+      "scope": "Small manually verified MVP seed records; not a bulk open-data feed",
+      "notes": "Keep source links on every record. Replace the seeds with licensed structured feeds as coverage expands.",
+      "reuseStatus": "linked_public_information"
     }
   ]
 }
